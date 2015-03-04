@@ -1,0 +1,107 @@
+<?php
+$post_types = get_post_types(array('show_ui' => 'true'), 'objects');
+$taxonomies = get_taxonomies(array('show_ui' => 'true'), 'objects');
+$current_type = $current_subtype = $current_subtype_obj = false;
+$fields = array();
+if (!empty($_GET['re_type'])) {
+	$current_type = $_GET['re_type'];
+	if (!empty($_GET['re_post_type'])) {
+		$current_subtype = $_GET['re_post_type'];
+		$fields = array(
+			'post_title' => array(
+				'name' => __('Title', 'rapid-edit'),
+			),
+			'post_date' => array(
+				'name' => __('Date', 'rapid-edit'),
+			),
+		);
+	} elseif (!empty($_GET['re_taxonomy'])) {
+		$current_subtype = $_GET['re_taxonomy'];
+		$fields = array(
+			'term_name' => array(
+				'name' => __('Name', 'rapid-edit'),
+			),
+			'term_description' => array(
+				'name' => __('Description', 'rapid-edit'),
+			),
+		);
+	}
+}
+?>
+<div class="rapid-edit-settings">
+	<div class="wrap">
+		<h2><?php echo $rapid_edit->get_settings_manager()->get_menu_title(); ?></h2>
+
+		<p><?php _e('Please, select any post type or taxonomy to manage settings for.', 'rapid-edit'); ?></p>
+
+		<div class="navigation">
+			<h3><?php _e('Post Types', 'rapid-edit'); ?></h3>
+			<ul>
+				<?php 
+				$base_link = add_query_arg('re_type', 'post_type', remove_query_arg('re_taxonomy'));
+				foreach ($post_types as $pt): 
+					if ($current_type === 'post_type' && $current_subtype === $pt->name) {
+						$current_subtype_obj = $pt;
+						$active = 'class="active"';
+					} else {
+						$active = '';
+					}
+					?>
+					<li <?php echo $active; ?>>
+						<a href="<?php echo add_query_arg('re_post_type', $pt->name, $base_link); ?>"><?php echo $pt->labels->name; ?></a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<br class="clear" />
+
+			<h3><?php _e('Taxonomies', 'rapid-edit'); ?></h3>
+			<ul>
+				<?php 
+				$base_link = add_query_arg('re_type', 'taxonomy', remove_query_arg('re_post_type'));
+				foreach ($taxonomies as $tax): 
+					if ($current_type === 'taxonomy' && $current_subtype === $tax->name) {
+						$active = 'class="active"';
+						$current_subtype_obj = $tax;
+					} else {
+						$active = '';
+					}
+					?>
+					<li <?php echo $active; ?>>
+						<a href="<?php echo add_query_arg('re_taxonomy', $tax->name, $base_link); ?>"><?php echo $tax->labels->name; ?></a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<br class="clear" />
+		</div>
+
+		<?php if (!empty($current_type) && !empty($current_subtype)): ?>
+			<div class="rapid-edit-item-fields">
+				<h2><?php printf(__('Settings for: %s', 'rapid-edit'), $current_subtype_obj->labels->name); ?></h2>
+				<br class="clear" />
+
+				<label>
+					<?php printf(__('Enable Rapid Edit for %s?', 'rapid-edit'), $current_subtype_obj->labels->name); ?>
+					<select name="re_enable_<?php echo $current_type . '_' . $current_subtype; ?>">
+						<option value="0"><?php _e('No', 'rapid-edit'); ?></option>
+						<option value="1"><?php _e('Yes', 'rapid-edit'); ?></option>
+					</select>
+				</label>
+				<br class="clear" />
+
+				<div class="fields-container">
+					<div class="selected-fields field-list">
+						
+					</div>
+
+					<div class="field-options field-list">
+						<?php foreach ($fields as $field_name => $field_data): ?>
+							<div class="rapid-edit-field"><?php echo $field_data['name']; ?></div>
+						<?php endforeach; ?>
+					</div>
+
+				</div>
+
+			</div>
+		<?php endif ?>
+	</div>
+</div>
