@@ -9,20 +9,20 @@ if (!empty($_GET['re_type'])) {
 		$current_subtype = $_GET['re_post_type'];
 		$fields = array(
 			'post_title' => array(
-				'name' => __('Title', 'rapid-edit'),
+				'title' => __('Title', 'rapid-edit'),
 			),
 			'post_date' => array(
-				'name' => __('Date', 'rapid-edit'),
+				'title' => __('Date', 'rapid-edit'),
 			),
 		);
 	} elseif (!empty($_GET['re_taxonomy'])) {
 		$current_subtype = $_GET['re_taxonomy'];
 		$fields = array(
 			'term_name' => array(
-				'name' => __('Name', 'rapid-edit'),
+				'title' => __('Name', 'rapid-edit'),
 			),
 			'term_description' => array(
-				'name' => __('Description', 'rapid-edit'),
+				'title' => __('Description', 'rapid-edit'),
 			),
 		);
 	}
@@ -79,28 +79,38 @@ if (!empty($_GET['re_type'])) {
 				<h2><?php printf(__('Settings for: %s', 'rapid-edit'), $current_subtype_obj->labels->name); ?></h2>
 				<br class="clear" />
 
-				<label>
-					<?php printf(__('Enable Rapid Edit for %s?', 'rapid-edit'), $current_subtype_obj->labels->name); ?>
-					<select name="re_enable_<?php echo $current_type . '_' . $current_subtype; ?>">
-						<option value="0"><?php _e('No', 'rapid-edit'); ?></option>
-						<option value="1"><?php _e('Yes', 'rapid-edit'); ?></option>
-					</select>
-				</label>
-				<br class="clear" />
+				<form method="POST" action="">
+					<label>
+						<?php printf(__('Enable Rapid Edit for %s?', 'rapid-edit'), $current_subtype_obj->labels->name); ?>
+						<select name="re_enable_<?php echo $current_type . '_' . $current_subtype; ?>">
+							<option value="0"><?php _e('No', 'rapid-edit'); ?></option>
+							<option value="1"><?php _e('Yes', 'rapid-edit'); ?></option>
+						</select>
+					</label>
+					<br class="clear" />
 
-				<div class="fields-container">
-					<div class="selected-fields field-list">
-						
+					<div class="fields-container">
+						<div class="selected-fields field-list">
+							
+						</div>
+
+						<div class="field-options field-list">
+							<?php foreach ($fields as $field_name => $field_data): ?>
+								<div class="rapid-edit-field">
+									<span><?php echo $field_data['title']; ?></span>
+									<input type="hidden" name="re_selected_fields[]" disabled="disabled" value="<?php echo $field_name; ?>" class="field-trigger" />
+								</div>
+							<?php endforeach; ?>
+						</div>
+
 					</div>
+					<br class="clear" />
 
-					<div class="field-options field-list">
-						<?php foreach ($fields as $field_name => $field_data): ?>
-							<div class="rapid-edit-field"><?php echo $field_data['name']; ?></div>
-						<?php endforeach; ?>
-					</div>
+					<input type="hidden" name="re_settings_type" value="<?php echo $current_type; ?>" />
+					<input type="hidden" name="re_settings_subtype" value="<?php echo $current_subtype; ?>" />
 
-				</div>
-
+					<?php submit_button(); ?>
+				</form>
 			</div>
 		<?php endif ?>
 	</div>
