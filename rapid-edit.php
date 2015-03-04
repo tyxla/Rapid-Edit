@@ -34,6 +34,15 @@ class Rapid_Edit {
 	protected $assets_url;
 
 	/**
+	 * Settings manager object.
+	 *
+	 * @access protected
+	 *
+	 * @var Rapid_Edit_Settings_Manager
+	 */
+	protected $settings_manager;
+
+	/**
 	 * Constructor.
 	 *	
 	 * Initializes and hooks the plugin functionality.
@@ -48,6 +57,27 @@ class Rapid_Edit {
 		// set assets URL
 		$this->set_assets_url(plugins_url('/', __FILE__));
 
+		// include all plugin files
+		$this->include_files();
+
+		// initialize settings manager
+		$this->set_settings_manager(new Rapid_Edit_Settings_Manager());
+
+		// enqueue scripts
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+
+		// enqueue styles
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
+
+	}
+
+	/**
+	 * Load the plugin classes and libraries.
+	 *
+	 * @access protected
+	 */
+	protected function include_files() {
+		require_once($this->get_plugin_path() . '/core/class-settings-manager.php');
 	}
 
 	/**
@@ -92,6 +122,46 @@ class Rapid_Edit {
 	 */
 	protected function set_assets_url($assets_url) {
 		$this->assets_url = $assets_url;
+	}
+
+	/**
+	 * Retrieve the settings manager object.
+	 *
+	 * @access public
+	 *
+	 * @return string $settings_manager The settings manager object.
+	 */
+	public function get_settings_manager() {
+		return $this->settings_manager;
+	}
+
+	/**
+	 * Modify the settings manager object.
+	 *
+	 * @access protected
+	 *
+	 * @param string $settings_manager The new settings manager object.
+	 */
+	protected function set_settings_manager($settings_manager) {
+		$this->settings_manager = $settings_manager;
+	}
+
+	/**
+	 * Enqueue main plugin scripts.
+	 *
+	 * @access public
+	 */
+	public function enqueue_scripts() {
+		wp_enqueue_script('rapid-edit-main', $this->get_assets_url() . 'js/main.js', array('jquery-ui-sortable'));
+	}
+
+	/**
+	 * Enqueue main plugin styles.
+	 *
+	 * @access public
+	 */
+	public function enqueue_styles() {
+		wp_enqueue_style('rapid-edit-main', $this->get_assets_url() . 'css/main.css');
 	}
 
 }
