@@ -14,6 +14,12 @@ if (!empty($_GET['re_type'])) {
 			'post_date' => array(
 				'title' => __('Date', 'rapid-edit'),
 			),
+			'post_author' => array(
+				'title' => __('Author', 'rapid-edit'),
+			),
+			'post_status' => array(
+				'title' => __('Status', 'rapid-edit'),
+			),
 		);
 	} elseif (!empty($_GET['re_taxonomy'])) {
 		$current_subtype = $_GET['re_taxonomy'];
@@ -23,6 +29,9 @@ if (!empty($_GET['re_type'])) {
 			),
 			'term_description' => array(
 				'title' => __('Description', 'rapid-edit'),
+			),
+			'term_slug' => array(
+				'title' => __('Slug', 'rapid-edit'),
 			),
 		);
 	}
