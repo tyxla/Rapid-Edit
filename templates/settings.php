@@ -11,6 +11,15 @@ if (!empty($_GET['re_type'])) {
 			'post_title' => array(
 				'title' => __('Title', 'rapid-edit'),
 			),
+			'post_content' => array(
+				'title' => __('Content', 'rapid-edit'),
+			),
+			'post_excerpt' => array(
+				'title' => __('Excerpt', 'rapid-edit'),
+			),
+			'post_name' => array(
+				'title' => __('Slug', 'rapid-edit'),
+			),
 			'post_date' => array(
 				'title' => __('Date', 'rapid-edit'),
 			),
@@ -19,6 +28,9 @@ if (!empty($_GET['re_type'])) {
 			),
 			'post_status' => array(
 				'title' => __('Status', 'rapid-edit'),
+			),
+			'menu_order' => array(
+				'title' => __('Order', 'rapid-edit'),
 			),
 		);
 	} elseif (!empty($_GET['re_taxonomy'])) {
@@ -32,6 +44,9 @@ if (!empty($_GET['re_type'])) {
 			),
 			'term_slug' => array(
 				'title' => __('Slug', 'rapid-edit'),
+			),
+			'term_parent' => array(
+				'title' => __('Parent', 'rapid-edit'),
 			),
 		);
 	}
